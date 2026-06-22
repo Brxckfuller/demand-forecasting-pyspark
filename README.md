@@ -1,38 +1,59 @@
 # Demand Forecasting with PySpark
 
-## Project Summary
+## Overview
 
-This project explores demand forecasting using transaction data from an online retail store. The goal was to investigate whether machine learning models could improve on a simple forecasting baseline when predicting future sales.
+This project uses PySpark to forecast weekly demand from e-commerce transaction data.
 
-The project was built using PySpark and follows a typical machine learning workflow: data cleaning, feature engineering, model training, evaluation, and result comparison.
+The aim was to test whether machine learning models could beat a simple forecasting baseline. The pipeline cleans raw transaction data, aggregates sales by week, creates lag features, trains several models, and compares forecast errors.
 
 ## Dataset
 
 The project uses the Online Retail dataset from the UCI Machine Learning Repository.
 
-The dataset contains over 500,000 retail transactions, including invoice information, product descriptions, quantities purchased, unit prices, customer IDs, and transaction dates.
+The raw dataset includes:
 
-After cleaning the data, sales were aggregated into weekly totals to create a forecasting problem.
+- invoice numbers
+- product codes
+- product descriptions
+- quantities sold
+- invoice dates
+- unit prices
+- customer IDs
+- countries
 
-## Data Preparation
+After cleaning and aggregation, the final forecasting dataset contained 53 weekly observations.
 
-The cleaning process removed missing product codes, missing transaction dates, missing quantities, returns, cancelled orders, and transactions with non-positive prices.
+## Approach
 
-## Feature Engineering
+The workflow was:
 
-The forecasting dataset used lag-based features:
+1. Load transaction data with Spark
+2. Remove invalid transactions
+3. Convert invoice dates to timestamps
+4. Aggregate total sales by year and week
+5. Create lag and rolling-average features
+6. Split data by time
+7. Train and evaluate forecasting models
 
-- Previous week's sales
-- Sales from two weeks ago
-- Sales from three weeks ago
-- Sales from four weeks ago
-- Four-week rolling average
+## Features
 
-## Models Evaluated
+The model inputs were:
+
+- `Lag_1_Week`
+- `Lag_2_Week`
+- `Lag_3_Week`
+- `Lag_4_Week`
+- `Rolling_4_Week_Avg`
+
+The target variable was:
+
+- `TotalSales`
+
+## Models
 
 The following models were compared:
 
-- Baseline forecast using previous week's sales
+- Baseline forecast: previous week's sales
 - Linear Regression
 - Random Forest Regressor
 - Gradient Boosted Trees Regressor
@@ -46,33 +67,29 @@ The following models were compared:
 | Random Forest | 53,737.69 | 62,447.57 | 29.70% |
 | Gradient Boosted Trees | 53,813.57 | 62,507.84 | 29.86% |
 
-## Discussion
+## Takeaway
 
-The simple baseline model achieved the lowest MAE and RMSE. This suggests that weekly demand in this dataset has strong short-term autocorrelation, meaning the previous week's sales are a strong signal for the following week.
+The baseline model had the lowest MAE and RMSE.
 
-The machine learning models did not outperform the baseline. This is likely because the final weekly forecasting dataset contained only 53 observations after aggregation. With such a small time series, more complex models such as Random Forests and Gradient Boosted Trees had limited data to learn from.
+The machine learning models did not improve on the simple previous-week forecast. The most likely reason is the small number of training examples after weekly aggregation. With only 53 weekly observations, the tree-based models did not have enough history to learn stable patterns.
 
-This was a useful result because it shows that model complexity does not automatically lead to better forecasting performance.
+This project was useful because it showed that a simple baseline is not just a formality in forecasting. It can be difficult to beat when recent demand is already a strong predictor.
 
-## Technologies Used
+## Project Structure
 
-- Python
-- PySpark
-- Spark MLlib
-- Time series feature engineering
-- Machine learning model evaluation
-
-## Future Improvements
-
-Possible extensions include:
-
-- Forecasting demand at the product/SKU level
-- Adding holiday and seasonal features
-- Using a longer historical dataset
-- Comparing against ARIMA or Prophet
-- Building a dashboard for forecast results
-
-## Author
-
-Brock Fuller  
-Master of Artificial Intelligence, RMIT University
+```text
+src/
+├── main.py
+├── spark_session.py
+├── data_cleaning.py
+├── weekly_features.py
+├── weekly_forecasting.py
+├── weekly_model_training.py
+├── save_results.py
+├── save_data.py
+├── eda.py
+├── feature_engineering.py
+├── forecasting.py
+├── model_training.py
+├── model_training_ml.py
+└── model_training_rf.py
