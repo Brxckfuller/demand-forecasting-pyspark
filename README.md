@@ -23,17 +23,51 @@ The raw dataset includes:
 
 After cleaning and aggregation, the final forecasting dataset contained 53 weekly observations.
 
-## Approach
+## How to Run
 
-The workflow was:
+### Step 1: Clone the repository
 
-1. Load transaction data with Spark
-2. Remove invalid transactions
-3. Convert invoice dates to timestamps
-4. Aggregate total sales by year and week
-5. Create lag and rolling-average features
-6. Split data by time
-7. Train and evaluate forecasting models
+```bash
+git clone https://github.com/Brxckfuller/demand-forecasting-pyspark.git
+cd demand-forecasting-pyspark
+```
+
+### Step 2: Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Step 3: Add the dataset
+
+Place the Online Retail dataset in:
+
+```text
+data/raw/online_retail.csv
+```
+
+### Step 4: Run the forecasting pipeline
+
+```bash
+python src/main.py
+```
+
+### Step 5: View results
+
+The pipeline will:
+
+- Clean and validate transaction data
+- Aggregate sales into weekly demand
+- Create lag and rolling-average features
+- Generate a baseline forecast
+- Train Linear Regression, Random Forest and Gradient Boosted Tree models
+- Compare MAE, RMSE and MAPE across models
+
+Model comparison results are saved automatically to:
+
+```text
+data/outputs/model_comparison/
+```
 
 ## Features
 
