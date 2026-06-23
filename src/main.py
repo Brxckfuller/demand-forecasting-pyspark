@@ -13,16 +13,16 @@ from weekly_model_training import (
 from save_results import save_model_comparison
 
 
-# --------------------------------------------------
+
 # CREATE SPARK SESSION
-# --------------------------------------------------
+
 
 spark = create_spark_session()
 
 
-# --------------------------------------------------
+
 # LOAD DATA
-# --------------------------------------------------
+
 
 df = (
     spark.read
@@ -35,9 +35,9 @@ print("\nROWS BEFORE CLEANING:")
 print(df.count())
 
 
-# --------------------------------------------------
+
 # CLEAN DATA
-# --------------------------------------------------
+
 
 df = clean_data(df)
 
@@ -45,9 +45,9 @@ print("\nROWS AFTER CLEANING:")
 print(df.count())
 
 
-# --------------------------------------------------
+
 # CREATE WEEKLY SALES DATASET
-# --------------------------------------------------
+
 
 weekly_sales = create_weekly_sales(df)
 
@@ -58,9 +58,9 @@ print("\nNUMBER OF WEEKS:")
 print(weekly_sales.count())
 
 
-# --------------------------------------------------
+
 # CREATE FORECASTING FEATURES
-# --------------------------------------------------
+
 
 forecast_df = create_weekly_forecasting_dataset(weekly_sales)
 
@@ -68,9 +68,9 @@ print("\nWEEKLY FORECASTING DATASET")
 forecast_df.show(20, truncate=False)
 
 
-# --------------------------------------------------
+
 # BASELINE MODEL
-# --------------------------------------------------
+
 
 baseline_predictions, baseline_mae, baseline_rmse, baseline_mape = (
     evaluate_baseline(forecast_df)
@@ -82,9 +82,9 @@ print(f"RMSE: {baseline_rmse}")
 print(f"MAPE: {baseline_mape}")
 
 
-# --------------------------------------------------
+
 # LINEAR REGRESSION
-# --------------------------------------------------
+
 
 lr_predictions, lr_mae, lr_rmse, lr_mape = (
     train_linear_regression_weekly(forecast_df)
@@ -96,9 +96,9 @@ print(f"RMSE: {lr_rmse}")
 print(f"MAPE: {lr_mape}")
 
 
-# --------------------------------------------------
+
 # RANDOM FOREST
-# --------------------------------------------------
+
 
 rf_predictions, rf_mae, rf_rmse, rf_mape = (
     train_random_forest_weekly(forecast_df)
@@ -124,9 +124,9 @@ print(f"RMSE: {gbt_rmse}")
 print(f"MAPE: {gbt_mape}")
 
 
-# --------------------------------------------------
+
 # MODEL COMPARISON
-# --------------------------------------------------
+
 
 print("\nMODEL COMPARISON")
 print("-" * 50)
@@ -154,9 +154,9 @@ print(f"Gradient Boosted Trees RMSE: {gbt_rmse}")
 print(f"Gradient Boosted Trees MAPE: {gbt_mape}")
 
 
-# --------------------------------------------------
+
 # SAVE RESULTS
-# --------------------------------------------------
+
 
 comparison_df = save_model_comparison(
     spark,
@@ -179,8 +179,8 @@ print("\nMODEL COMPARISON SAVED")
 comparison_df.show(truncate=False)
 
 
-# --------------------------------------------------
+
 # SHUTDOWN
-# --------------------------------------------------
+
 
 spark.stop()
