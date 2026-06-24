@@ -127,3 +127,10 @@ src/
 ├── model_training.py
 ├── model_training_ml.py
 └── model_training_rf.py
+``` 
+
+## Author
+
+Brock Fuller
+
+Master of Artificial Intelligence – RMIT University
